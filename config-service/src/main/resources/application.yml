@@ -1,0 +1,9 @@
+server.port: 8080
+spring:
+  application:
+    name: config-service
+  jpa:
+    show-sql: false
+    generate-ddl: false
+  config:
+    import: classpath:flyway.yml

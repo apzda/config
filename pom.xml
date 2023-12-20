@@ -18,6 +18,7 @@
         <module>config-client</module>
         <module>config-proto</module>
         <module>config-service</module>
+        <module>config-demo</module>
     </modules>
 
     <properties>

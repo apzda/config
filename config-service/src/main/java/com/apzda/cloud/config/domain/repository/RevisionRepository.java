@@ -38,4 +38,6 @@ public interface RevisionRepository extends PagingAndSortingRepository<Revision,
 
     Page<Revision> findAllBySettingKeyOrderByRevisionDesc(String settingKey, Pageable page);
 
+    Optional<Revision> findBySettingKeyAndRevision(String settingKey, Integer revision);
+
 }

@@ -16,9 +16,12 @@
  */
 package com.apzda.cloud.config.domain.entity;
 
-import com.apzda.cloud.gsvc.domain.AuditableTenantedEntity;
+import com.apzda.cloud.gsvc.domain.AuditedEntity;
+import com.apzda.cloud.gsvc.domain.AutoMetaListener;
+import com.apzda.cloud.gsvc.domain.TenantedEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -36,7 +39,9 @@ import org.hibernate.type.SqlTypes;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Setting implements AuditableTenantedEntity {
+@Slf4j
+@EntityListeners(AutoMetaListener.class)
+public class Setting implements AuditedEntity, TenantedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

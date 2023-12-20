@@ -6,9 +6,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: Abc12378(
+  jpa:
+    hibernate:
+      ddl-auto: validate
   flyway:
     baseline-on-migrate: true
 logging:
   level:
     com.apzda: debug
-    sql: debug

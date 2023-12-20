@@ -86,6 +86,7 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public CommonRes restore(RestoreReq request) {
+        val builder = CommonRes.newBuilder();
         boolean restored;
         if (request.hasRevision()) {
             restored = settingService.restore(request.getKey(), request.getRevision());
@@ -93,7 +94,15 @@ public class ConfigServiceImpl implements ConfigService {
         else {
             restored = settingService.restore(request.getKey());
         }
-        return null;
+        if (restored) {
+            builder.setErrCode(0);
+        }
+        else {
+            builder.setErrCode(500);
+            builder.setErrMsg(String.format("Cannot restore Setting(%s) to revision %d", request.getKey(),
+                    request.getRevision()));
+        }
+        return builder.build();
     }
 
     @Override
@@ -102,6 +111,7 @@ public class ConfigServiceImpl implements ConfigService {
         val settingCls = request.getKey();
         val pager = Pager.of(request.getPager());
         val revisions = settingService.revisions(settingCls, pager);
+        log.trace("Revisions of {} - {}", settingCls, revisions);
         val pageInfo = Pager.of(revisions);
         builder.setErrCode(0);
         for (Revision revision : revisions.getContent()) {

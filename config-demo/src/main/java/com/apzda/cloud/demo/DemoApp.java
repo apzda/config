@@ -14,19 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.apzda.cloud.config;
+package com.apzda.cloud.demo;
 
-import java.io.Serializable;
+import com.apzda.cloud.config.server.EnableConfigServer;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @author fengz (windywany@gmail.com)
  * @version 1.0.0
  * @since 1.0.0
  **/
-public interface Setting extends Serializable {
+@SpringBootApplication
+@EnableConfigServer
+public class DemoApp {
 
-    static String genSettingKey(Class<? extends Setting> sClass, String tenantId) {
-        return sClass.getCanonicalName() + "@" + tenantId;
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApp.class, args);
     }
 
 }

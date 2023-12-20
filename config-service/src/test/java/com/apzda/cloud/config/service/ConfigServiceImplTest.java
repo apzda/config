@@ -4,10 +4,8 @@ import com.apzda.cloud.config.TestApp;
 import com.apzda.cloud.config.TestSetting;
 import com.apzda.cloud.config.autoconfig.ConfigAutoConfiguration;
 import com.apzda.cloud.config.exception.SettingUnavailableException;
-import com.apzda.cloud.config.proto.ConfigService;
-import com.apzda.cloud.config.proto.KeyReq;
-import com.apzda.cloud.config.proto.RevisionReq;
-import com.apzda.cloud.config.proto.SaveReq;
+import com.apzda.cloud.config.proto.*;
+import com.apzda.cloud.gsvc.domain.Pager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.ByteString;
@@ -52,7 +50,7 @@ class ConfigServiceImplTest {
     private SettingService settingService;
 
     @Test
-    void load() {
+    void load_should_be_ok() {
         // given
         val builder = KeyReq.newBuilder();
         builder.setKey(TestSetting.class.getCanonicalName());
@@ -67,7 +65,7 @@ class ConfigServiceImplTest {
     }
 
     @Test
-    void save() throws JsonProcessingException, SettingUnavailableException, InterruptedException {
+    void save_restore_should_be_ok() throws JsonProcessingException, SettingUnavailableException, InterruptedException {
         // given
         val settingKey = TestSetting.class.getCanonicalName() + "@0";
         val ts = new TestSetting();
@@ -140,7 +138,115 @@ class ConfigServiceImplTest {
         assertThat(revisions.getPageInfo().getFirst()).isTrue();
         assertThat(revisions.getPageInfo().getNumberOfElements()).isEqualTo(1);
         assertThat(revisions.getRevisionCount()).isEqualTo(1);
-        assertThat(revisions.getRevision(0).getRevision()).isEqualTo(1);
+        val revision = revisions.getRevision(0);
+        assertThat(revision.getRevision()).isEqualTo(1);
+        assertThat(revision.getCreatedAt()).isNotNull();
+
+        // restore
+        // given
+        val restoreReq = RestoreReq.newBuilder().setKey(settingKey).setRevision(revision.getRevision()).build();
+        // when - restore
+        val restoreRes = configService.restore(restoreReq);
+        // then
+        assertThat(restoreRes.getErrCode()).isEqualTo(0);
+        TimeUnit.SECONDS.sleep(2);
+        // when
+        setting = settingService.load(TestSetting.class);
+        // then
+        assertThat(setting).isNotNull();
+        assertThat(setting.getAge()).isEqualTo(18);
+        assertThat(setting.getName()).isEqualTo("gsvc");
+        assertThat(setting.getAddress()).contains("a1", "d1", "c2");
+
+        // when - get revisions again
+        val revisions4 = configService.revisions(b3.build());
+        // then
+        assertThat(revisions4.getPageInfo().getFirst()).isTrue();
+        assertThat(revisions4.getPageInfo().getNumberOfElements()).isEqualTo(2);
+        assertThat(revisions4.getRevisionCount()).isEqualTo(2);
+        val revision4 = revisions4.getRevision(0);
+        assertThat(revision4.getRevision()).isEqualTo(2);
+        assertThat(revision4.getCreatedAt()).isNotNull();
+
+    }
+
+    @Test
+    void client_setting_service_save_should_be_ok() throws SettingUnavailableException, InterruptedException {
+        // given
+        val setting = new TestSetting();
+        setting.setAge(18);
+        setting.setName("gsvc");
+        setting.setAddress(List.of("a", "b", "c"));
+        // when
+        var saved = settingService.save(setting);
+        // then
+        assertThat(saved).isTrue();
+
+        // when
+        TimeUnit.SECONDS.sleep(2);
+        val cSetting = settingService.load(TestSetting.class);
+        // then
+        assertThat(cSetting).isNotNull();
+        assertThat(cSetting.getAge()).isEqualTo(18);
+        assertThat(cSetting.getName()).isEqualTo("gsvc");
+        assertThat(cSetting.getAddress()).contains("a", "b", "c");
+    }
+
+    @Test
+    void client_setting_service_update_should_be_ok() throws SettingUnavailableException, InterruptedException {
+        // given
+        client_setting_service_save_should_be_ok();
+        val setting = new TestSetting();
+        setting.setAge(20);
+        setting.setName("gsvc");
+        setting.setAddress(List.of("a", "b", "d"));
+        // when
+        var saved = settingService.save(setting);
+        // then
+        assertThat(saved).isTrue();
+        // when
+        TimeUnit.SECONDS.sleep(2);
+        val cSetting = settingService.load(TestSetting.class);
+        // then
+        assertThat(cSetting).isNotNull();
+        assertThat(cSetting.getAge()).isEqualTo(20);
+        assertThat(cSetting.getName()).isEqualTo("gsvc");
+        assertThat(cSetting.getAddress()).contains("a", "b", "d");
+        assertThat(cSetting.getAddress()).doesNotContain("c");
+    }
+
+    @Test
+    void client_setting_service_restore_should_be_ok() throws SettingUnavailableException, InterruptedException {
+        // given
+        client_setting_service_update_should_be_ok();
+        // when
+        var revisions = settingService.revisions(TestSetting.class, Pager.of(0, 10));
+        // then
+        assertThat(revisions).isNotEmpty();
+        assertThat(revisions.size()).isEqualTo(1);
+
+        // given - 1
+        val revision = revisions.get(0);
+        // when
+        val restored = settingService.restore(revision);
+        // then
+        assertThat(restored).isTrue();
+
+        // given
+        TimeUnit.SECONDS.sleep(2);
+        // when
+        val setting = settingService.load(TestSetting.class);
+        // then
+        assertThat(setting).isNotNull();
+        assertThat(setting.getAge()).isEqualTo(18);
+        assertThat(setting.getName()).isEqualTo("gsvc");
+        assertThat(setting.getAddress()).contains("a", "b", "c");
+
+        // when
+        revisions = settingService.revisions(TestSetting.class, Pager.of(0, 10));
+        // then
+        assertThat(revisions).isNotEmpty();
+        assertThat(revisions.size()).isEqualTo(2);
     }
 
 }

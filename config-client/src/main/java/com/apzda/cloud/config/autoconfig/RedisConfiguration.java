@@ -36,7 +36,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(RedisConnectionFactory.class)
 @Slf4j
-class RedisPubSubConfiguration {
+class RedisConfiguration {
 
     @Bean
     @Qualifier("configRedisMessageListenerAdapter")

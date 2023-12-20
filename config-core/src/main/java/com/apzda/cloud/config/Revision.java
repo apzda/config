@@ -16,17 +16,22 @@
  */
 package com.apzda.cloud.config;
 
-import java.io.Serializable;
+import lombok.Data;
 
 /**
  * @author fengz (windywany@gmail.com)
  * @version 1.0.0
  * @since 1.0.0
  **/
-public interface Setting extends Serializable {
+@Data
+public class Revision<T extends Setting> {
 
-    static String genSettingKey(Class<? extends Setting> sClass, String tenantId) {
-        return sClass.getCanonicalName() + "@" + tenantId;
-    }
+    private String settingKey;
+
+    private int revision;
+
+    private T setting;
+
+    private long createdAt;
 
 }

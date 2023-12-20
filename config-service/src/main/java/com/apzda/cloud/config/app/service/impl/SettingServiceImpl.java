@@ -35,6 +35,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Optional;
+
 /**
  * @author fengz (windywany@gmail.com)
  * @version 1.0.0
@@ -71,19 +73,14 @@ public class SettingServiceImpl implements SettingService {
             val revision = BeanUtil.copyProperties(oldSetting, Revision.class, "id", "createdAt", "createdBy");
             revision
                 .setRevision(lastRevision.orElseGet(() -> Revision.builder().revision(0).build()).getRevision() + 1);
-            revision.fillAuditInfo();
-            revision.fillTenantData();
             revisionRepository.save(revision);
             BeanUtil.copyProperties(setting, oldSetting,
                     CopyOptions.create().ignoreNullValue().setIgnoreProperties("id"));
-            oldSetting.fillAuditInfo();
             settingRepository.save(oldSetting);
             eventPublisher.publishEvent(new SettingChangedEvent(setting.getSettingCls()));
             return true;
         }
         else {
-            setting.fillAuditInfo();
-            setting.fillTenantData();
             settingRepository.save(setting);
             if (setting.getId() != null) {
                 eventPublisher.publishEvent(new SettingChangedEvent(setting.getSettingCls()));
@@ -112,7 +109,20 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
+    @Transactional
     public boolean restore(String settingCls, int revision) {
+        Optional<Revision> rev;
+        if (revision > 0) {
+            rev = revisionRepository.findBySettingKeyAndRevision(genSettingKey(settingCls), revision);
+        }
+        else {
+            rev = revisionRepository.findFirstBySettingKeyOrderByRevisionDesc(genSettingKey(settingCls));
+        }
+        if (rev.isPresent()) {
+            val setting = rev.get();
+            val restoredSetting = BeanUtil.copyProperties(setting, Setting.class, "id", "createdAt", "createdBy");
+            return save(restoredSetting);
+        }
         return false;
     }
 

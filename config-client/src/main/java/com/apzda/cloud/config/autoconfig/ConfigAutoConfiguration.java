@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Import;
  * @since 1.0.0
  **/
 @AutoConfiguration(after = RedisAutoConfiguration.class)
-@Import({ ConfigServiceGsvc.class, RedisPubSubConfiguration.class })
+@Import({ ConfigServiceGsvc.class, RedisConfiguration.class })
 public class ConfigAutoConfiguration {
 
     @Bean

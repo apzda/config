@@ -16,12 +16,12 @@
  */
 package com.apzda.cloud.config.service.impl;
 
+import com.apzda.cloud.config.Revision;
 import com.apzda.cloud.config.Setting;
 import com.apzda.cloud.config.exception.SettingUnavailableException;
-import com.apzda.cloud.config.proto.ConfigService;
-import com.apzda.cloud.config.proto.KeyReq;
-import com.apzda.cloud.config.proto.SaveReq;
+import com.apzda.cloud.config.proto.*;
 import com.apzda.cloud.config.service.SettingService;
+import com.apzda.cloud.gsvc.domain.Pager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -29,8 +29,12 @@ import com.google.common.cache.LoadingCache;
 import com.google.protobuf.ByteString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -57,7 +61,7 @@ public class SettingServiceImpl extends CacheLoader<String, Setting> implements 
     @SuppressWarnings("unchecked")
     public <T extends Setting> T load(@NonNull Class<T> tClass, @NonNull String tenantId)
             throws SettingUnavailableException {
-        val settingKey = tClass.getCanonicalName() + "@" + tenantId;
+        val settingKey = Setting.genSettingKey(tClass, tenantId);
         try {
             val setting = cache.get(settingKey);
             return (T) setting;
@@ -72,7 +76,7 @@ public class SettingServiceImpl extends CacheLoader<String, Setting> implements 
             throws SettingUnavailableException {
         val builder = SaveReq.newBuilder();
         val aClass = setting.getClass();
-        val settingKey = aClass.getCanonicalName() + "@" + tenantId;
+        val settingKey = Setting.genSettingKey(aClass, tenantId);
 
         builder.setKey(settingKey);
         try {
@@ -89,6 +93,49 @@ public class SettingServiceImpl extends CacheLoader<String, Setting> implements 
         catch (Exception e) {
             throw new SettingUnavailableException(settingKey, e);
         }
+    }
+
+    @Override
+    public <T extends Setting> List<Revision<T>> revisions(@NonNull Class<T> tClass, @NonNull String tenantId,
+            Pageable pager) {
+        val req = RevisionReq.newBuilder();
+        val settingKey = Setting.genSettingKey(tClass, tenantId);
+        req.setKey(settingKey);
+        req.setPager(Pager.to(pager));
+
+        val res = configService.revisions(req.build());
+        if (res.getErrCode() == 0) {
+            return res.getRevisionList().stream().map(revision -> {
+                val rev = new Revision<T>();
+                rev.setSettingKey(settingKey);
+                rev.setCreatedAt(revision.getCreatedAt());
+                rev.setRevision(revision.getRevision());
+                try {
+                    rev.setSetting(objectMapper.readValue(revision.getSetting().toByteArray(), tClass));
+                }
+                catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                return rev;
+            }).toList();
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean restore(@NonNull Revision<?> revision) {
+        val builder = RestoreReq.newBuilder();
+        builder.setKey(revision.getSettingKey());
+        builder.setRevision(revision.getRevision());
+        val res = configService.restore(builder.build());
+        if (res.getErrCode() == 0) {
+            return true;
+        }
+        else {
+            log.error("Cannot restore setting({}) to {} - {}", revision.getSettingKey(), revision.getRevision(),
+                    res.getErrMsg());
+        }
+        return false;
     }
 
     @Override

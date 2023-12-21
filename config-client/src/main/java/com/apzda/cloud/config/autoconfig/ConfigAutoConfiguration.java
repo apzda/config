@@ -23,12 +23,15 @@ import com.apzda.cloud.config.proto.ConfigServiceGsvc;
 import com.apzda.cloud.config.service.SettingService;
 import com.apzda.cloud.config.service.impl.SettingServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+
+import static com.apzda.cloud.config.listener.SettingChangedListener.BEAN_NAME;
 
 /**
  * @author fengz (windywany@gmail.com)
@@ -37,6 +40,7 @@ import org.springframework.context.annotation.Import;
  **/
 @AutoConfiguration(after = RedisAutoConfiguration.class)
 @Import({ ConfigServiceGsvc.class, RedisConfiguration.class })
+@Slf4j
 public class ConfigAutoConfiguration {
 
     @Bean
@@ -44,9 +48,10 @@ public class ConfigAutoConfiguration {
         return new SettingServiceImpl(objectMapper, configService);
     }
 
-    @Bean
-    @ConditionalOnMissingBean
+    @Bean(BEAN_NAME)
+    @ConditionalOnMissingBean(name = BEAN_NAME)
     ApplicationListener<SettingChangedEvent> configSettingChangedListener(SettingService settingService) {
+        log.debug("Local Setting Changed Listener configured!");
         return new SettingChangedListener(settingService);
     }
 

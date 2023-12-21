@@ -17,18 +17,15 @@ jobs:
       matrix:
         java: [ '17','21' ]
     services:
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
       mysql:
         image: mysql:8.0.35
         ports:
-          - 3306:3306
+          - 3307:3306
         env:
-          MYSQL_ROOT_PASSWORD: dEf123)98
+          MYSQL_ROOT_PASSWORD: Abc12332!
+          MYSQL_DATABASE: demo_db
     env:
-      SERVER_PORT_NO: 8082
+      SERVER_PORT_NO: 38080
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -41,14 +38,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B -P+it  package -Djava.version=${{ matrix.java }} --file pom.xml
+        run: mvn -B -P+it package -Djava.version=${{ matrix.java }} --file pom.xml
       - name: Run AllInOne Application
         uses: JarvusInnovations/background-action@v1
         with:
-          working-directory: oss-service
+          working-directory: config-demo
           wait-for: 2m
           tail: true
-          run: java -jar target/config-service-fat.jar &
+          run: java -jar target/config-demo-fat.jar &
           wait-on: http-get://localhost:${{ env.SERVER_PORT_NO }}/actuator/health
       - name: Download ijhttp tools
         run: |-
@@ -56,4 +53,4 @@ jobs:
           unzip ijhttp.zip
           ./ijhttp/ijhttp --version
       - name: Execute HTTP requests
-        run: ./ijhttp/ijhttp config-service/src/test/http/it.http
+        run: ./ijhttp/ijhttp config-demo/src/test/http/it.http

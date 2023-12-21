@@ -33,13 +33,15 @@ import org.springframework.lang.NonNull;
 @Slf4j
 public class SettingChangedListener implements ApplicationListener<SettingChangedEvent> {
 
+    public static final String BEAN_NAME = "com.apzda.cloud.config.listener.SettingChangedListenerBean";
+
     private final SettingService settingService;
 
     @Override
     public void onApplicationEvent(@NonNull SettingChangedEvent event) {
         val source = event.getSource();
         val settingKey = source.toString();
-        log.debug("Refresh Setting({})", settingKey);
+        log.debug("Refresh Setting({}) locally", settingKey);
         settingService.refresh(settingKey);
     }
 

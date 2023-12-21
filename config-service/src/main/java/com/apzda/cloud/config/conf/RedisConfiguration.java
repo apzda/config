@@ -17,6 +17,7 @@
 package com.apzda.cloud.config.conf;
 
 import com.apzda.cloud.config.event.SettingChangedEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.ApplicationListener;
@@ -25,6 +26,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 
+import static com.apzda.cloud.config.listener.SettingChangedListener.BEAN_NAME;
+
 /**
  * @author fengz (windywany@gmail.com)
  * @version 1.0.0
@@ -32,11 +35,13 @@ import org.springframework.data.redis.listener.ChannelTopic;
  **/
 @Configuration
 @ConditionalOnClass(StringRedisTemplate.class)
+@Slf4j
 class RedisConfiguration {
 
-    @Bean
+    @Bean(BEAN_NAME)
     ApplicationListener<SettingChangedEvent> configSettingChangedListener(StringRedisTemplate redisTemplate,
             @Qualifier("configChangedMessageTopic") ChannelTopic topic) {
+        log.debug("Redis Setting Changed Listener configured!");
         return event -> redisTemplate.convertAndSend(topic.getTopic(), event.getSource().toString());
     }
 

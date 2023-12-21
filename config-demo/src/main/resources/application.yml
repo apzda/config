@@ -1,4 +1,4 @@
-server.port: 8080
+server.port: 38080
 spring:
   application:
     name: config-dmo
@@ -14,3 +14,7 @@ spring:
       ddl-auto: validate
   flyway:
     locations: classpath:db/migration/{vendor}
+
+logging:
+  level:
+    com.apzda: debug

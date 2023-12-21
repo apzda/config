@@ -20,6 +20,11 @@
             <groupId>com.apzda.cloud</groupId>
             <artifactId>config-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!-- runtime -->
         <dependency>
             <groupId>com.mysql</groupId>

@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: classpath:flyway.yml
   data:
     redis:
       database: 0

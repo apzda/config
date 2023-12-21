@@ -2,3 +2,5 @@ spring:
   flyway:
     create-schemas: true
     locations: classpath:db/migration/{vendor}
+  profiles:
+    active:

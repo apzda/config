@@ -1,3 +1,3 @@
 # Apzda App Configuration
 
-运行时配置服务.
+业务配置服务.

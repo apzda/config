@@ -1,4 +1,4 @@
-name: Oss Service Integration Tests
+name: Config Service Integration Tests
 
 on:
   pull_request:

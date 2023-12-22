@@ -25,6 +25,8 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Duration;
+
 /**
  * @author fengz (windywany@gmail.com)
  * @version 1.0.0
@@ -42,7 +44,8 @@ public class TestApp {
         @Bean
         @ServiceConnection(name = "redis")
         GenericContainer<?> redis() {
-            return new GenericContainer<>(DockerImageName.parse("redis:7-alpine")).withExposedPorts(6379);
+            return new GenericContainer<>(DockerImageName.parse("redis:7-alpine")).withExposedPorts(6379)
+                .withStartupTimeout(Duration.ofMinutes(3));
         }
 
         @Bean
@@ -50,7 +53,8 @@ public class TestApp {
         MySQLContainer<?> mysql() {
             return new MySQLContainer<>(DockerImageName.parse("mysql:8.0.35")).withDatabaseName("apzda_config_db")
                 .withUsername("root")
-                .withPassword("Abc12378(");
+                .withPassword("Abc12378(")
+                .withStartupTimeout(Duration.ofMinutes(3));
         }
 
     }

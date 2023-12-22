@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ImportAutoConfiguration({ JacksonAutoConfiguration.class, RedisAutoConfiguration.class,
         ConfigAutoConfiguration.class })
 @ActiveProfiles({ "test" })
-@Testcontainers
+@Testcontainers(parallel = true)
 class ConfigServiceImplTest {
 
     @Autowired

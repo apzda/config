@@ -42,7 +42,7 @@ import static org.mockito.BDDMockito.given;
 @ImportAutoConfiguration({ RedisAutoConfiguration.class, ConfigAutoConfiguration.class })
 @TestPropertySource(properties = { "logging.level.com.apzda=debug" })
 @ActiveProfiles("test")
-@Testcontainers
+@Testcontainers(parallel = true)
 class RedisMessageSubscriberTest {
 
     @MockBean

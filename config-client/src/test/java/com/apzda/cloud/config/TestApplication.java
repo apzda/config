@@ -17,11 +17,11 @@
 package com.apzda.cloud.config;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
@@ -35,13 +35,13 @@ import java.time.Duration;
 public class TestApplication {
 
     @TestConfiguration(proxyBeanMethods = false)
+    @ConditionalOnProperty(name = "skip.container", havingValue = "no", matchIfMissing = true)
     static class TestConfig {
 
         @Bean
         @ServiceConnection(name = "redis")
         GenericContainer<?> redis() {
-            return new GenericContainer<>(DockerImageName.parse("redis:7-alpine"))
-                .withExposedPorts(6379)
+            return new GenericContainer<>(DockerImageName.parse("redis:7-alpine")).withExposedPorts(6379)
                 .withStartupTimeout(Duration.ofMinutes(3));
         }
 

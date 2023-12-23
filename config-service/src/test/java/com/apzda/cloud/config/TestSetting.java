@@ -36,4 +36,8 @@ public class TestSetting implements Setting {
 
     private List<String> address;
 
+    @Override
+    public String name() {
+        return "Test Setting";
+    }
 }

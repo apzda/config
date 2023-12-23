@@ -29,4 +29,14 @@ public interface Setting extends Serializable {
         return sClass.getCanonicalName() + "@" + tenantId;
     }
 
+    String name();
+
+    default String icon() {
+        return null;
+    }
+
+    default String style() {
+        return null;
+    }
+
 }

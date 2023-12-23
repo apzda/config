@@ -28,10 +28,10 @@ public class Revision<T extends Setting> {
 
     private String settingKey;
 
+    private long createdAt;
+
     private int revision;
 
     private T setting;
-
-    private long createdAt;
 
 }

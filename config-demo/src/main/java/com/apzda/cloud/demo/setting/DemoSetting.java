@@ -35,4 +35,8 @@ public class DemoSetting implements Setting {
 
     private List<String> addresses;
 
+    @Override
+    public String name() {
+        return "Demo Setting";
+    }
 }

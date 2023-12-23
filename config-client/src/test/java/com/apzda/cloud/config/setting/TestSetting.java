@@ -36,4 +36,9 @@ public class TestSetting implements Setting {
 
     private Integer age;
 
+    @Override
+    public String name() {
+        return "Test Setting";
+    }
+
 }

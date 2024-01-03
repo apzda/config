@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>config</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>pom</packaging>
     <modules>
         <module>config-core</module>
@@ -53,7 +53,7 @@
         <url>https://github.com/apzda/app-config.git</url>
         <connection>scm:git@github.com:apzda/app-config.git</connection>
         <developerConnection>scm:git:git@github.com:apzda/app-config.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v1.0.3</tag>
     </scm>
 
     <distributionManagement>
@@ -78,22 +78,22 @@
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>config-core</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.3</version>
             </dependency>
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>config-proto</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.3</version>
             </dependency>
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>config-client</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.3</version>
             </dependency>
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>config-service</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

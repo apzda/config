@@ -1,6 +1,6 @@
 spring:
   flyway:
-    create-schemas: true
+    create-schemas: false
     locations: classpath:db/migration/{vendor}
-  profiles:
-    active:
+  jpa:
+    open-in-view: false

@@ -87,21 +87,4 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>it</id>
-            <build>
-                <finalName>${project.name}</finalName>
-            </build>
-        </profile>
-    </profiles>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

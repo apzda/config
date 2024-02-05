@@ -3,8 +3,6 @@ server.port: 8082
 spring:
   application:
     name: config-service
-  config:
-    import: classpath:flyway.yml
   data:
     redis:
       database: 0

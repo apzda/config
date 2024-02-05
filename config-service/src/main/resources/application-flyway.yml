@@ -1,6 +1,7 @@
 spring:
   flyway:
-    create-schemas: false
     locations: classpath:db/migration/{vendor}
+    out-of-order: true
   jpa:
     open-in-view: false
+

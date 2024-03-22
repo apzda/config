@@ -20,7 +20,7 @@ import com.apzda.cloud.config.Revision;
 import com.apzda.cloud.config.exception.SettingUnavailableException;
 import com.apzda.cloud.config.service.SettingService;
 import com.apzda.cloud.demo.setting.DemoSetting;
-import com.apzda.cloud.gsvc.domain.Pager;
+import com.apzda.cloud.gsvc.domain.PagerUtils;
 import com.apzda.cloud.gsvc.dto.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -64,7 +64,7 @@ public class DemoController {
             @RequestParam(value = "page_size", required = false, defaultValue = "1") int pageSize)
             throws SettingUnavailableException {
         val setting = settingService.revisions(DemoSetting.class,
-                Pager.of(pageNumber, pageSize).withSort(Sort.Direction.DESC, "revision"));
+                PagerUtils.of(pageNumber, pageSize).withSort(Sort.Direction.DESC, "revision"));
         return Response.success(setting);
     }
 

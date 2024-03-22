@@ -4,7 +4,7 @@
     <parent>
         <artifactId>apzda-cloud-gsvc-parent</artifactId>
         <groupId>com.apzda.cloud</groupId>
-        <version>1.2.8</version>
+        <version>1.2.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>config</artifactId>
@@ -24,12 +24,12 @@
 
     <issueManagement>
         <system>Github Issue</system>
-        <url>https://github.com/apzda/app-config/issues</url>
+        <url>https://github.com/apzda/config/issues</url>
     </issueManagement>
 
     <ciManagement>
         <system>Github Actions</system>
-        <url>https://github.com/apzda/app-config/actions</url>
+        <url>https://github.com/apzda/config/actions</url>
     </ciManagement>
 
     <licenses>
@@ -51,9 +51,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/apzda/app-config.git</url>
-        <connection>scm:git@github.com:apzda/app-config.git</connection>
-        <developerConnection>scm:git:git@github.com:apzda/app-config.git</developerConnection>
+        <url>https://github.com/apzda/config.git</url>
+        <connection>scm:git@github.com:apzda/config.git</connection>
+        <developerConnection>scm:git:git@github.com:apzda/config.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -70,7 +70,7 @@
         <site>
             <id>apzda-oss</id>
             <name>Apzda OSS Project</name>
-            <url>https://docs.apzda.com/app-config</url>
+            <url>https://docs.apzda.com/config</url>
         </site>
     </distributionManagement>
 

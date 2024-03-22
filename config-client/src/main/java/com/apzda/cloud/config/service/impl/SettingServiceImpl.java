@@ -21,7 +21,7 @@ import com.apzda.cloud.config.Setting;
 import com.apzda.cloud.config.exception.SettingUnavailableException;
 import com.apzda.cloud.config.proto.*;
 import com.apzda.cloud.config.service.SettingService;
-import com.apzda.cloud.gsvc.domain.Pager;
+import com.apzda.cloud.gsvc.domain.PagerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -101,7 +101,7 @@ public class SettingServiceImpl extends CacheLoader<String, Setting> implements 
         val req = RevisionReq.newBuilder();
         val settingKey = Setting.genSettingKey(tClass, tenantId);
         req.setKey(settingKey);
-        req.setPager(Pager.to(pager));
+        req.setPager(PagerUtils.to(pager));
 
         val res = configService.revisions(req.build());
         if (res.getErrCode() == 0) {

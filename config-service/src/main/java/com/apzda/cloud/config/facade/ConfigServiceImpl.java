@@ -20,7 +20,7 @@ import com.apzda.cloud.config.app.service.SettingService;
 import com.apzda.cloud.config.domain.entity.Revision;
 import com.apzda.cloud.config.domain.entity.Setting;
 import com.apzda.cloud.config.proto.*;
-import com.apzda.cloud.gsvc.domain.Pager;
+import com.apzda.cloud.gsvc.domain.PagerUtils;
 import com.google.protobuf.ByteString;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,10 +109,10 @@ public class ConfigServiceImpl implements ConfigService {
     public RevisionRes revisions(RevisionReq request) {
         val builder = RevisionRes.newBuilder();
         val settingCls = request.getKey();
-        val pager = Pager.of(request.getPager());
+        val pager = PagerUtils.of(request.getPager());
         val revisions = settingService.revisions(settingCls, pager);
         log.trace("Revisions of {} - {}", settingCls, revisions);
-        val pageInfo = Pager.of(revisions);
+        val pageInfo = PagerUtils.of(revisions);
         builder.setErrCode(0);
         for (Revision revision : revisions.getContent()) {
             val rb = com.apzda.cloud.config.proto.Revision.newBuilder();

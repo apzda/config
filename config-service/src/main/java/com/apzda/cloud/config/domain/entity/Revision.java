@@ -16,9 +16,10 @@
  */
 package com.apzda.cloud.config.domain.entity;
 
-import com.apzda.cloud.gsvc.domain.AuditedEntity;
-import com.apzda.cloud.gsvc.domain.AutoMetaListener;
-import com.apzda.cloud.gsvc.domain.TenantedEntity;
+import com.apzda.cloud.gsvc.domain.AuditingEntityListener;
+import com.apzda.cloud.gsvc.model.Auditable;
+import com.apzda.cloud.gsvc.model.SoftDeletable;
+import com.apzda.cloud.gsvc.model.Tenantable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -37,8 +38,8 @@ import org.hibernate.type.SqlTypes;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AutoMetaListener.class)
-public class Revision implements AuditedEntity, TenantedEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class Revision implements Auditable<Long, String, Long>, Tenantable<String>, SoftDeletable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

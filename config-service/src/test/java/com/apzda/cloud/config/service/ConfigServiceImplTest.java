@@ -5,7 +5,7 @@ import com.apzda.cloud.config.TestSetting;
 import com.apzda.cloud.config.autoconfig.ConfigAutoConfiguration;
 import com.apzda.cloud.config.exception.SettingUnavailableException;
 import com.apzda.cloud.config.proto.*;
-import com.apzda.cloud.gsvc.domain.Pager;
+import com.apzda.cloud.gsvc.domain.PagerUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.ByteString;
@@ -220,7 +220,7 @@ class ConfigServiceImplTest {
         // given
         client_setting_service_update_should_be_ok();
         // when
-        var revisions = settingService.revisions(TestSetting.class, Pager.of(0, 10));
+        var revisions = settingService.revisions(TestSetting.class, PagerUtils.of(0, 10));
         // then
         assertThat(revisions).isNotEmpty();
         assertThat(revisions.size()).isEqualTo(1);
@@ -243,7 +243,7 @@ class ConfigServiceImplTest {
         assertThat(setting.getAddress()).contains("a", "b", "c");
 
         // when
-        revisions = settingService.revisions(TestSetting.class, Pager.of(0, 10));
+        revisions = settingService.revisions(TestSetting.class, PagerUtils.of(0, 10));
         // then
         assertThat(revisions).isNotEmpty();
         assertThat(revisions.size()).isEqualTo(2);

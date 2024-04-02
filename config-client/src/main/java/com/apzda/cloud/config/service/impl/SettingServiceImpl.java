@@ -29,6 +29,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.protobuf.ByteString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 
@@ -143,18 +144,27 @@ public class SettingServiceImpl extends CacheLoader<String, Setting> implements 
     public Setting load(@NonNull String settingKey) throws Exception {
         val builder = KeyReq.newBuilder();
         builder.setKey(settingKey);
-        val res = configService.load(builder.build());
-        if (res.hasErrMsg()) {
-            log.error("Cannot load setting({}): {}", settingKey, res.getErrMsg());
-            throw new SettingUnavailableException(settingKey, res.getErrMsg());
-        }
-        val setting = res.getSetting();
-        log.debug("Setting({}) loaded from ConfiService", settingKey);
         val settingMeta = SettingService.getSettingMeta(settingKey);
         val aClass = settingMeta.settingClass();
         if (aClass == null) {
             throw new ClassNotFoundException(settingMeta.clazz());
         }
+
+        val res = configService.load(builder.build());
+        val errCode = res.getErrCode();
+
+        if (errCode == 404) {
+            // 应用使用默认值
+            val setting = BeanUtils.instantiateClass(aClass);
+            return setting;
+        }
+        else if (errCode != 0) {
+            log.error("Cannot load setting({}): {}", settingKey, res.getErrMsg());
+            throw new SettingUnavailableException(settingKey, res.getErrMsg());
+        }
+        val setting = res.getSetting();
+        log.debug("Setting({}) loaded from ConfiService", settingKey);
+
         return objectMapper.readValue(setting.toByteArray(), aClass);
     }
 

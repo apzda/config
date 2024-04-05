@@ -5,19 +5,20 @@ spring:
     name: config-service
   data:
     redis:
+      host: localhost
       database: 0
+      lettuce:
+        pool:
+          enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/apzda_config_db?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3307/apzda_infra_db?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
     password: Abc12332!
   jpa:
-    show-sql: false
-    generate-ddl: false
-    hibernate:
-      ddl-auto: validate
+    show-sql: true
 
 logging:
   level:
-    com.apzda: debug
+    com.apzda: trace
 

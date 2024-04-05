@@ -19,7 +19,6 @@
             <groupId>com.apzda.cloud</groupId>
             <artifactId>config-service</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>

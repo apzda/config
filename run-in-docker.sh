@@ -15,6 +15,7 @@ if [ "$1" = "up" ]; then
     else
         mvn -pl ${SERVICE_NAME}-server -P+layer -am clean package
     fi
+    docker compose down
     docker rmi "apzda/${SERVICE_NAME}-server:latest"
 fi
 

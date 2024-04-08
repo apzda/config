@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-CUR_DATE=$(date "+%Y%m%d%H%M")
+BUILD_DATE=$(date "+%Y%m%d%H%M")
 SERVICE_NAME=config
 SERVICE_VER=1.0.7
 
@@ -7,7 +7,7 @@ SERVICE_VER=1.0.7
 # do not edit below
 #=======================================================================
 export SERVICE_NAME=${SERVICE_NAME}
-export SERVICE_VER="${SERVICE_VER}-${CUR_DATE}"
+export SERVICE_VER="${SERVICE_VER}-${BUILD_DATE}"
 
 if [ "$1" = "up" ]; then
     if [ "${2:0:2}" = "-D" ]; then
@@ -15,7 +15,7 @@ if [ "$1" = "up" ]; then
     else
         mvn -pl ${SERVICE_NAME}-server -P+layer -am clean package
     fi
-    docker rmi "apzda/${SERVICE_NAME}-server:${SERVICE_VER}"
+    docker rmi "apzda/${SERVICE_NAME}-server:latest"
 fi
 
 if [ -z "$1" ]; then

@@ -17,8 +17,11 @@
 package com.apzda.cloud.config.domain.repository;
 
 import com.apzda.cloud.config.domain.entity.Setting;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author fengz (windywany@gmail.com)
@@ -29,5 +32,10 @@ import org.springframework.stereotype.Repository;
 public interface SettingRepository extends CrudRepository<Setting, Long> {
 
     Setting findBySettingKey(String settingKey);
+
+    @Transactional
+    @Modifying
+    @Query("update Setting s set s.setting = ?1 where s.id = ?2 and s.version = ?3")
+    int updateByIdAndVersion(String setting, Long id, Short version);
 
 }

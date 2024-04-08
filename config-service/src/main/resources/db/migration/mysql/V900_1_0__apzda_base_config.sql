@@ -7,6 +7,7 @@ CREATE TABLE `apzda_base_setting`
     updated_by  VARCHAR(32),
     deleted     BIT             NOT NULL DEFAULT FALSE COMMENT 'Soft Deleted Flag',
     tenant_id   VARCHAR(32) COMMENT 'the id of the tenant to which this setting belongs',
+    version     smallint        NOT NULL COMMENT 'version no.',
     setting_key CHAR(32)        NOT NULL COMMENT 'The MD5 value of Setting Key',
     setting_cls VARCHAR(512)    NOT NULL COMMENT 'Setting class name',
     setting     LONGTEXT COMMENT 'Base64 encoded the JSON value of a Setting',

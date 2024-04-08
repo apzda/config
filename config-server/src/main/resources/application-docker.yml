@@ -2,6 +2,6 @@ apzda:
   cloud:
     registry:
       type: docker
-      name-style: dashed
+      name-style: kebab
     security:
       meta-repo: redis

@@ -34,12 +34,14 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @PropertySource("classpath:apzda.config.service.properties")
-@Import({ ConfigServiceGsvc.class, ConfigServiceConfig.class })
-@ComponentScan(basePackages = { "com.apzda.cloud.config.facade", "com.apzda.cloud.config.app",
-        "com.apzda.cloud.config.domain" })
-@EnableJpaRepositories(basePackages = { "com.apzda.cloud.config.domain.repository" })
+@Import({ ConfigServiceConfig.class })
+@ComponentScan({
+    "com.apzda.cloud.config.facade",
+    "com.apzda.cloud.config.domain",
+    "com.apzda.cloud.config.app",
+})
+@EnableJpaRepositories("com.apzda.cloud.config.domain.repository")
 @EntityScan("com.apzda.cloud.config.domain.entity")
 @Documented
 public @interface EnableConfigServer {
-
 }

@@ -16,14 +16,15 @@
  */
 package com.apzda.cloud.config.domain.entity;
 
-import com.apzda.cloud.gsvc.domain.AuditingEntityListener;
-import com.apzda.cloud.gsvc.model.Auditable;
+import com.apzda.cloud.gsvc.domain.TenantableEntity;
 import com.apzda.cloud.gsvc.model.SoftDeletable;
-import com.apzda.cloud.gsvc.model.Tenantable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.type.SqlTypes;
 
 /**
@@ -36,13 +37,14 @@ import org.hibernate.type.SqlTypes;
 @Getter
 @Setter
 @Entity
-@Table(name = "apzda_base_setting")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Slf4j
-@EntityListeners(AuditingEntityListener.class)
-public class Setting implements Auditable<Long, String, Long>, Tenantable<String>, SoftDeletable {
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE apzda_base_setting SET deleted = true WHERE id=? AND version=?")
+@Table(name = "apzda_base_setting")
+public class Setting extends TenantableEntity<Long, String, Long, String> implements SoftDeletable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,10 +62,16 @@ public class Setting implements Auditable<Long, String, Long>, Tenantable<String
 
     private boolean deleted;
 
+    @Version
+    private Short version;
+
+    @NotNull
     @Column(length = 32, nullable = false)
     @JdbcTypeCode(SqlTypes.CHAR)
     private String settingKey;
 
+    @NotNull
+    @Column(nullable = false)
     private String settingCls;
 
     private String setting;

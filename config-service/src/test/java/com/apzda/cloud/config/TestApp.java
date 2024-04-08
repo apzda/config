@@ -35,8 +35,8 @@ import java.time.Duration;
  **/
 
 @SpringBootApplication
+// @TestPropertySource(properties = { "spring.test.context.failure.threshold=1000000" })
 @EnableConfigServer
-// @Testcontainers
 public class TestApp {
 
     @TestConfiguration(proxyBeanMethods = false)
@@ -45,7 +45,6 @@ public class TestApp {
 
         @Bean
         @ServiceConnection(name = "redis")
-
         GenericContainer<?> redis() {
             return new GenericContainer<>(DockerImageName.parse("redis:7-alpine")).withExposedPorts(6379)
                 .withStartupTimeout(Duration.ofMinutes(3));

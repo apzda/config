@@ -6,6 +6,7 @@ import com.apzda.cloud.config.TestApp;
 import com.apzda.cloud.config.autoconfig.ConfigAutoConfiguration;
 import com.apzda.cloud.config.domain.entity.Setting;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ class SettingRepositoryTest {
     @Autowired
     private SettingRepository settingRepository;
 
-    @Autowired
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired

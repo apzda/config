@@ -3,11 +3,10 @@ package com.apzda.cloud.config.service;
 import com.apzda.cloud.config.TestApp;
 import com.apzda.cloud.config.TestSetting;
 import com.apzda.cloud.config.autoconfig.ConfigAutoConfiguration;
-import com.apzda.cloud.config.conf.ConfigServiceConfig;
 import com.apzda.cloud.config.exception.SettingUnavailableException;
 import com.apzda.cloud.config.proto.*;
-import com.apzda.cloud.gsvc.client.IServiceCaller;
 import com.apzda.cloud.gsvc.domain.PagerUtils;
+import com.apzda.cloud.test.autoconfig.AutoConfigureGsvcTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.ByteString;
@@ -15,16 +14,12 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.redis.AutoConfigureDataRedis;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
@@ -40,12 +35,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ContextConfiguration(classes = TestApp.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ImportAutoConfiguration({ ConfigAutoConfiguration.class})
+@ImportAutoConfiguration({ ConfigAutoConfiguration.class })
 @AutoConfigureJson
 @AutoConfigureDataRedis
+@AutoConfigureGsvcTest
 @ActiveProfiles({ "test" })
 @Testcontainers(parallel = true)
 class ConfigServiceImplTest {
+
     @Autowired
     private ObjectMapper objectMapper;
 

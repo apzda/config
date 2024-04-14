@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import com.apzda.cloud.config.TestApp;
 import com.apzda.cloud.config.autoconfig.ConfigAutoConfiguration;
 import com.apzda.cloud.config.domain.entity.Setting;
+import com.apzda.cloud.test.autoconfig.AutoConfigureGsvcTest;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.val;
@@ -38,6 +39,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ImportAutoConfiguration({ ConfigAutoConfiguration.class })
 @AutoConfigureJson
 @AutoConfigureDataRedis
+@AutoConfigureGsvcTest
 @ActiveProfiles({ "test" })
 @Testcontainers(parallel = true)
 class SettingRepositoryTest {
@@ -80,7 +82,9 @@ class SettingRepositoryTest {
     }
 
     @Test
+    @Modifying
     void version_optimistic_should_be_ok() {
+
         assertThatThrownBy(() -> {
             updateSetting("bb").join();
         }).cause().isInstanceOf(OptimisticLockingFailureException.class);
@@ -88,7 +92,17 @@ class SettingRepositoryTest {
 
     CompletableFuture<Void> updateSetting(String str) {
         return CompletableFuture.supplyAsync(() -> transactionTemplate.execute(status -> {
-            val setting = settingRepository.findBySettingKey("a");
+            // given
+            var setting = new Setting();
+            setting.setSettingKey("a");
+            setting.setSetting("123");
+            setting.setSettingCls("Object");
+
+            // when
+            settingRepository.save(setting);
+            entityManager.flush();
+
+            setting = settingRepository.findBySettingKey("a");
             val oriSetting = BeanUtil.copyProperties(setting, Setting.class);
             System.out.println("setting[1] = " + oriSetting);
             setting.setSetting(DateUtil.now());

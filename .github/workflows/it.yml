@@ -32,19 +32,23 @@ jobs:
       SERVER_PORT_NO: 38080
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B -P+it package -Dskip.container=yes -Djava.version=${{ matrix.java }} --file pom.xml
+        run: |-
+          mvn -B -P+it package \
+            -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}\
+            -Dskip.container=yes \
+            -Djava.version=${{ matrix.java }} --file pom.xml
       - name: Run AllInOne Application
-        uses: JarvusInnovations/background-action@v1
+        uses: JarvusInnovations/background-action@v1.0.7
         with:
           working-directory: config-demo
           wait-for: 2m
@@ -56,5 +60,18 @@ jobs:
           curl -f -L -o ijhttp.zip "https://jb.gg/ijhttp/latest"
           unzip ijhttp.zip
           ./ijhttp/ijhttp --version
-      - name: Execute HTTP requests
+      - name: Execute Integration Tests
         run: ./ijhttp/ijhttp config-demo/src/test/http/it.http
+  deploy:
+    needs: [ "build" ]
+    runs-on: ubuntu-22.04
+    env:
+      MAVEN_USERNAME: ${{ secrets.OSSRH_ID }}
+      MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+    steps:
+      - name: Install gpg secret key
+        run: |-
+          # Install gpg secret key
+          cat <(echo -e "${{ secrets.GPG_SECURITY_KEY }}") | gpg --batch --import
+          # Verify gpg secret key
+          gpg --list-secret-keys --keyid-format LONG

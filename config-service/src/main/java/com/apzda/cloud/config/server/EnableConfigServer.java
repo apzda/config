@@ -17,11 +17,9 @@
 package com.apzda.cloud.config.server;
 
 import com.apzda.cloud.config.conf.ConfigServiceConfig;
-import com.apzda.cloud.config.proto.ConfigServiceGsvc;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.lang.annotation.*;
@@ -33,15 +31,11 @@ import java.lang.annotation.*;
  **/
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@PropertySource("classpath:apzda.config.service.properties")
-@Import({ ConfigServiceConfig.class })
-@ComponentScan({
-    "com.apzda.cloud.config.facade",
-    "com.apzda.cloud.config.domain",
-    "com.apzda.cloud.config.app",
-})
+@Import(ConfigServiceConfig.class)
+@ComponentScan({ "com.apzda.cloud.config.facade", "com.apzda.cloud.config.domain", "com.apzda.cloud.config.app" })
 @EnableJpaRepositories("com.apzda.cloud.config.domain.repository")
 @EntityScan("com.apzda.cloud.config.domain.entity")
 @Documented
 public @interface EnableConfigServer {
+
 }

@@ -4,7 +4,7 @@
     <parent>
         <artifactId>apzda-cloud-gsvc-parent</artifactId>
         <groupId>com.apzda.cloud</groupId>
-        <version>1.2.13-SNAPSHOT</version>
+        <version>1.2.13</version>
     </parent>
 
     <artifactId>config</artifactId>
@@ -108,7 +108,6 @@
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <tagNameFormat>v@{project.version}</tagNameFormat>
                         <generateReleasePoms>false</generateReleasePoms>
-                        <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
                         <arguments>-Dmaven.site.skip=true</arguments>
                         <goals>deploy</goals>

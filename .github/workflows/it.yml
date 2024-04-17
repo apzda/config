@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  it:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -44,7 +44,7 @@ jobs:
       - name: Build with Maven
         run: |-
           mvn -B -P+it package \
-            -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}\
+            -Dgpg.passphrase=${{ secrets.GPG_SECURITY_PWD }}\
             -Dskip.container=yes \
             -Djava.version=${{ matrix.java }} --file pom.xml
       - name: Run AllInOne Application
@@ -63,7 +63,8 @@ jobs:
       - name: Execute Integration Tests
         run: ./ijhttp/ijhttp config-demo/src/test/http/it.http
   deploy:
-    needs: [ "build" ]
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [ "it" ]
     runs-on: ubuntu-22.04
     env:
       MAVEN_USERNAME: ${{ secrets.OSSRH_ID }}
@@ -75,3 +76,35 @@ jobs:
           cat <(echo -e "${{ secrets.GPG_SECURITY_KEY }}") | gpg --batch --import
           # Verify gpg secret key
           gpg --list-secret-keys --keyid-format LONG
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up maven settings
+        uses: s4u/maven-settings-action@v2.8.0
+        with:
+          servers: |
+            [{
+              "id": "ossrh",
+              "username": "${{ secrets.OSSRH_ID }}",
+              "password": "${{ secrets.OSSRH_TOKEN }}"
+            },
+            {
+              "id": "gpg",
+              "passphrase": "${{ secrets.GPG_SECURITY_PWD }}"
+            }]
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          cache: maven
+      - name: Deploy to OSSRH
+        run: mvn -P+release -Djava.version=17 -DskipTests=true clean deploy
+  release:
+    if: ${{ startsWith('refs/heads/tags',github.ref) }}
+    runs-on: ubuntu-22.04
+    needs: [ "deploy" ]
+    steps:
+      - name: release
+        run: echo release

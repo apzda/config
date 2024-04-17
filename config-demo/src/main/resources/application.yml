@@ -12,8 +12,10 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: validate
+    open-in-view: false
   flyway:
     locations: classpath:db/migration/{vendor}
+    enabled: true
 
 logging:
   level:

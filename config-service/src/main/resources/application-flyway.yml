@@ -3,6 +3,3 @@ spring:
     locations: classpath:/db/migration/{vendor}
     out-of-order: true
     baseline-on-migrate: true
-  jpa:
-    open-in-view: false
-

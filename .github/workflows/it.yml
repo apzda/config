@@ -47,7 +47,6 @@ jobs:
       - name: Build with Maven
         run: |-
           mvn -B -P+it package \
-            -Dgpg.passphrase=${{ secrets.GPG_SECURITY_PWD }}\
             -Dskip.container=yes \
             -Djava.version=${{ matrix.java }} --file pom.xml
       - name: Run AllInOne Application
@@ -70,7 +69,7 @@ jobs:
     needs: [ "it" ]
     runs-on: ubuntu-22.04
     env:
-      MAVEN_USERNAME: ${{ secrets.OSSRH_ID }}
+      MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
       MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
       GPG_SECURITY_PWD: ${{ secrets.GPG_SECURITY_PWD }}
     steps:
@@ -90,13 +89,8 @@ jobs:
           servers: |
             [{
               "id": "ossrh",
-              "username": "${{ secrets.OSSRH_ID }}",
+              "username": "${{ secrets.OSSRH_USERNAME }}",
               "password": "${{ secrets.OSSRH_TOKEN }}"
-            },
-            {
-              "id": "gpg",
-              "passphrase": "${{ secrets.GPG_SECURITY_PWD }}",
-              "configuration": {}
             }]
       - name: Set up JDK
         uses: actions/setup-java@v4

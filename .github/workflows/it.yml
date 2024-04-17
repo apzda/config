@@ -84,7 +84,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up maven settings
-        uses: s4u/maven-settings-action@v3
+        uses: s4u/maven-settings-action@v3.0.0
         with:
           servers: |
             [{

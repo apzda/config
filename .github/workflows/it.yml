@@ -100,10 +100,3 @@ jobs:
             }]
       - name: Deploy to OSSRH
         run: mvn -P+release -Djava.version=17 -DskipTests=true clean deploy
-  release:
-    if: ${{ startsWith('refs/heads/tags',github.ref) }}
-    runs-on: ubuntu-22.04
-    needs: [ "deploy" ]
-    steps:
-      - name: release
-        run: echo release

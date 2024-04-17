@@ -72,6 +72,7 @@ jobs:
     env:
       MAVEN_USERNAME: ${{ secrets.OSSRH_ID }}
       MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+      GPG_SECURITY_PWD: ${{ secrets.GPG_SECURITY_PWD }}
     steps:
       - name: Install gpg secret key
         run: |-

@@ -116,7 +116,7 @@
         <profile>
             <id>it</id>
             <properties>
-                <gsvc.compiler.version>${parent.version}</gsvc.compiler.version>
+                <gsvc.compiler.version>${project.parent.version}</gsvc.compiler.version>
             </properties>
         </profile>
     </profiles>

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>apzda-cloud-gsvc-parent</artifactId>
         <groupId>com.apzda.cloud</groupId>
-        <version>1.2.19-SNAPSHOT</version>
+        <version>1.2.19</version>
     </parent>
 
     <artifactId>config</artifactId>
@@ -112,14 +112,7 @@
             </snapshots>
         </repository>
     </repositories>
-    <profiles>
-        <profile>
-            <id>it</id>
-            <properties>
-                <gsvc.compiler.version>${project.parent.version}</gsvc.compiler.version>
-            </properties>
-        </profile>
-    </profiles>
+
     <build>
         <plugins>
             <plugin>

@@ -112,7 +112,14 @@
             </snapshots>
         </repository>
     </repositories>
-
+    <profiles>
+        <profile>
+            <id>it</id>
+            <properties>
+                <gsvc.compiler.version>${parent.version}</gsvc.compiler.version>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>

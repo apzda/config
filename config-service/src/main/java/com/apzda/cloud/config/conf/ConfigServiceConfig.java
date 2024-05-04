@@ -16,9 +16,7 @@
  */
 package com.apzda.cloud.config.conf;
 
-import com.apzda.cloud.gsvc.i18n.MessageSourceNameResolver;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -31,11 +29,5 @@ import org.springframework.context.annotation.Import;
 @Import(RedisConfiguration.class)
 @Slf4j
 public class ConfigServiceConfig {
-
-    @Bean("config.MessageSourceNameResolver")
-    MessageSourceNameResolver messageSourceNameResolver() {
-        log.debug("Register messageSourceName 'messages-cfg' for ConfigService");
-        return () -> "messages-cfg";
-    }
 
 }

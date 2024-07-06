@@ -17,8 +17,10 @@
 package com.apzda.cloud.config.conf;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * @author fengz (windywany@gmail.com)
@@ -27,6 +29,8 @@ import org.springframework.context.annotation.Import;
  **/
 @Configuration(proxyBeanMethods = false)
 @Import(RedisConfiguration.class)
+@EnableJpaRepositories("com.apzda.cloud.config.domain.repository")
+@EntityScan("com.apzda.cloud.config.domain.entity")
 @Slf4j
 public class ConfigServiceConfig {
 

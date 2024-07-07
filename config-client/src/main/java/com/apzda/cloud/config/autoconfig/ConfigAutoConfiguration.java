@@ -19,9 +19,9 @@ package com.apzda.cloud.config.autoconfig;
 import com.apzda.cloud.config.event.SettingChangedEvent;
 import com.apzda.cloud.config.listener.SettingChangedListener;
 import com.apzda.cloud.config.proto.ConfigService;
-import com.apzda.cloud.config.proto.ConfigServiceGsvc;
 import com.apzda.cloud.config.service.SettingService;
 import com.apzda.cloud.config.service.impl.SettingServiceImpl;
+import com.apzda.cloud.gsvc.config.EnableGsvcServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -39,7 +39,8 @@ import static com.apzda.cloud.config.listener.SettingChangedListener.BEAN_NAME;
  * @since 1.0.0
  **/
 @AutoConfiguration(after = RedisAutoConfiguration.class)
-@Import({ ConfigServiceGsvc.class, RedisConfiguration.class })
+@Import(RedisConfiguration.class)
+@EnableGsvcServices(ConfigService.class)
 @Slf4j
 public class ConfigAutoConfiguration {
 

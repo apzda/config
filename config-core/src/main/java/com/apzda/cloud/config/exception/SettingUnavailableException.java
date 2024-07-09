@@ -21,7 +21,7 @@ package com.apzda.cloud.config.exception;
  * @version 1.0.0
  * @since 1.0.0
  **/
-public class SettingUnavailableException extends Exception {
+public class SettingUnavailableException extends RuntimeException {
 
     public SettingUnavailableException(String key, String reason) {
         super("Setting(" + key + ") is unavailable: " + reason);
